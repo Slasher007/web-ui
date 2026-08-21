@@ -223,19 +223,30 @@ def get_llm_model(provider: str, **kwargs):
         else:
             base_url = kwargs.get("base_url")
 
-        if kwargs.get("model_name", "deepseek-chat") == "deepseek-reasoner":
+        model_name = kwargs.get("model_name", "deepseek-chat")
+
+        # Legacy reasoner path (kept for backward compat)
+        if model_name == "deepseek-reasoner":
             return DeepSeekR1ChatOpenAI(
-                model=kwargs.get("model_name", "deepseek-reasoner"),
+                model=model_name,
                 temperature=kwargs.get("temperature", 0.0),
                 base_url=base_url,
                 api_key=api_key,
             )
         else:
+            # V4 models (deepseek-v4-flash / deepseek-v4-pro) default to
+            # "thinking" mode, which is incompatible with browser-use's forced
+            # tool_choice. Explicitly disable thinking for these.
+            extra_body = {}
+            if model_name.startswith("deepseek-v4"):
+                extra_body = {"thinking": {"type": "disabled"}}
+
             return ChatOpenAI(
-                model=kwargs.get("model_name", "deepseek-chat"),
+                model=model_name,
                 temperature=kwargs.get("temperature", 0.0),
                 base_url=base_url,
                 api_key=api_key,
+                extra_body=extra_body,
             )
     elif provider == "google":
         return ChatGoogleGenerativeAI(
@@ -307,11 +318,22 @@ def get_llm_model(provider: str, **kwargs):
             params=parameters
         )
     elif provider == "moonshot":
+        model_name = kwargs.get("model_name", "moonshot-v1-32k-vision-preview")
+        extra_body = {}
+        if model_name.startswith("kimi-k3"):
+            # kimi-k3 defaults to "thinking" mode, which Moonshot rejects together
+            # with browser-use's forced tool_choice. Disable thinking; the API then
+            # only accepts temperature=0.6 (thinking mode would require 1).
+            extra_body = {"thinking": {"type": "disabled"}}
+            temperature = 0.6
+        else:
+            temperature = kwargs.get("temperature", 0.0)
         return ChatOpenAI(
-            model=kwargs.get("model_name", "moonshot-v1-32k-vision-preview"),
-            temperature=kwargs.get("temperature", 0.0),
-            base_url=os.getenv("MOONSHOT_ENDPOINT"),
+            model=model_name,
+            temperature=temperature,
+            base_url=os.getenv("MOONSHOT_ENDPOINT", "https://api.moonshot.ai/v1"),
             api_key=os.getenv("MOONSHOT_API_KEY"),
+            extra_body=extra_body,
         )
     elif provider == "unbound":
         return ChatOpenAI(
