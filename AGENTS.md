@@ -24,6 +24,7 @@ TARGETPLATFORM=linux/arm64 docker compose up --build
 ## Gotchas
 
 - `browser-use` is pinned to `0.1.48`. `src/browser/custom_browser.py`, `custom_context.py`, and `custom_controller.py` subclass that version's internal APIs (e.g. `browser_use.browser.browser.Browser`). Upgrading browser-use will break these imports.
+- "Use Own Browser" (`BROWSER_PATH` + `USE_OWN_BROWSER=true`) makes browser-use 0.1.48 spawn Chrome itself with `--remote-debugging-port=9242`. Chrome ≥136 ignores the debug port for the default profile dir, so `BROWSER_USER_DATA` must point to a dedicated dir (e.g. `./tmp/chrome-automation-profile`) — logins come from `BROWSER_COOKIES_FILE` instead. Close all Chrome windows before agent runs; the port is also hardcoded to 9242, not `.env`'s 9222.
 - `webui.py` calls `load_dotenv()` as the first statement, before other imports, because several modules read env vars at import time. Keep this order when adding imports there.
 - Tests in `tests/` are manual scripts hitting real LLM APIs and launching a real browser window — they need `.env` keys and are not a CI suite. They do `sys.path.append(".")`, so run them from the repo root (`python tests/test_llm_api.py`).
 - No pytest/ruff/typecheck config exists in the repo. Ruff formatting is only declared in `.vscode/settings.json`; CI (`.github/workflows/build.yml`) only builds/pushes Docker images on `main` pushes and releases.
