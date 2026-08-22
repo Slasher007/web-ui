@@ -81,6 +81,7 @@ model_names = {
         "nemotron-3-ultra-free", "nemotron-3.5-lightning-free",
     ],
     "openrouter": [
+        "stealth/ox-alpha",
         "nvidia/nemotron-3-ultra-550b-a55b:free",
         "z-ai/glm-5.2:free",
         "openrouter/free",
