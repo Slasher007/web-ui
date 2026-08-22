@@ -398,6 +398,7 @@ async def run_agent_task(
         "save_agent_history_path", "./tmp/agent_history"
     )
     save_download_path = get_browser_setting("save_download_path", "./tmp/downloads")
+    cookies_file = os.getenv("BROWSER_COOKIES_FILE", "").strip() or None
 
     stream_vw = 70
     stream_vh = int(70 * window_h // window_w)
@@ -487,6 +488,7 @@ async def run_agent_task(
                 save_downloads_path=save_download_path if save_download_path else None,
                 window_height=window_h,
                 window_width=window_w,
+                cookies_file=cookies_file,
             )
             if not webui_manager.bu_browser:
                 raise ValueError("Browser not initialized, cannot create context.")
