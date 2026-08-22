@@ -335,6 +335,30 @@ def get_llm_model(provider: str, **kwargs):
             api_key=os.getenv("MOONSHOT_API_KEY"),
             extra_body=extra_body,
         )
+    elif provider == "opencode_zen":
+        if not kwargs.get("base_url", ""):
+            base_url = os.getenv("OPENCODE_ZEN_ENDPOINT", "https://opencode.ai/zen/v1")
+        else:
+            base_url = kwargs.get("base_url")
+
+        return ChatOpenAI(
+            model=kwargs.get("model_name", "x-preview-f-free"),
+            temperature=kwargs.get("temperature", 0.0),
+            base_url=base_url,
+            api_key=api_key,
+        )
+    elif provider == "openrouter":
+        if not kwargs.get("base_url", ""):
+            base_url = os.getenv("OPENROUTER_ENDPOINT", "https://openrouter.ai/api/v1")
+        else:
+            base_url = kwargs.get("base_url")
+
+        return ChatOpenAI(
+            model=kwargs.get("model_name", "nvidia/nemotron-3-ultra-550b-a55b:free"),
+            temperature=kwargs.get("temperature", 0.0),
+            base_url=base_url,
+            api_key=api_key,
+        )
     elif provider == "unbound":
         return ChatOpenAI(
             model=kwargs.get("model_name", "gpt-4o-mini"),

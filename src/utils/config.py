@@ -9,6 +9,8 @@ PROVIDER_DISPLAY_NAMES = {
     "unbound": "Unbound AI",
     "ibm": "IBM",
     "grok": "Grok",
+    "opencode_zen": "OpenCode Zen",
+    "openrouter": "OpenRouter",
 }
 
 # Predefined model names for common providers
@@ -67,6 +69,26 @@ model_names = {
         "Pro/Qwen/Qwen2-1.5B-Instruct",
         "Pro/THUDM/chatglm3-6b",
         "Pro/THUDM/glm-4-9b-chat",
+    ],
+    "opencode_zen": [
+        "x-preview-f-free",
+        "deepseek-v4-flash", "deepseek-v4-pro",
+        "glm-5.2", "glm-5.1", "glm-5",
+        "kimi-k2.6", "kimi-k2.5", "kimi-k3",
+        "minimax-m2.7", "minimax-m2.5",
+        "grok-build-0.1", "big-pickle",
+        "mimo-v2.5-free", "hy3-free",
+        "nemotron-3-ultra-free", "nemotron-3.5-lightning-free",
+    ],
+    "openrouter": [
+        "nvidia/nemotron-3-ultra-550b-a55b:free",
+        "z-ai/glm-5.2:free",
+        "openrouter/free",
+        "poolside/laguna-s-2.1:free",
+        "cohere/north-mini-code:free",
+        "google/gemma-4-31b-it:free",
+        "nvidia/nemotron-nano-12b-v2-vl:free",
+        "nvidia/nemotron-3-super-120b-a12b:free",
     ],
     "ibm": ["ibm/granite-vision-3.1-2b-preview", "meta-llama/llama-4-maverick-17b-128e-instruct-fp8",
             "meta-llama/llama-3-2-90b-vision-instruct"],
